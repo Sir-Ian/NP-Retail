@@ -1,4 +1,4 @@
-# NP Real Estate Model
+# Real Estate Modeler
 
 This project evaluates potential retail locations based on historic customer data using geospatial clustering and visualization. It is structured for easy reuse and extension to other datasets.
 
