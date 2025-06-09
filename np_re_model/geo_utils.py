@@ -1,5 +1,9 @@
 import numpy as np
 from geopy.distance import great_circle
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderServiceError
+
+_geolocator = Nominatim(user_agent="np-retail-geocoder")
 
 def get_eps_from_miles(miles, reference_latitude):
     origin = (reference_latitude, 0)
@@ -11,3 +15,14 @@ def get_eps_from_miles(miles, reference_latitude):
 
 def distance_to_nearest_retail(point, retail_locations):
     return min(great_circle(point, retail_loc).miles for retail_loc in retail_locations)
+
+
+def geocode_address(address):
+    """Lookup latitude and longitude for a given address using Nominatim."""
+    try:
+        location = _geolocator.geocode(address)
+        if location:
+            return location.latitude, location.longitude
+    except GeocoderServiceError:
+        pass
+    return None, None
