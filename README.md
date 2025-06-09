@@ -3,9 +3,10 @@
 This project evaluates potential retail locations based on historic customer data using geospatial clustering and visualization. It is structured for easy reuse and extension to other datasets.
 
 ## Features
-- Calculate coordinates from zip codes
-- Cluster locations using weighted K-means
-- Visualize clusters and proximity to existing retail locations
+- Calculate coordinates from zip codes or addresses via geocoding APIs
+- Cluster locations using weighted K-means, DBSCAN, or HDBSCAN
+- Visualize clusters and proximity to existing retail locations in notebooks or the web dashboard
+- Export clustered data to CSV directly from the dashboard
 
 ## Project Structure
 
@@ -32,6 +33,11 @@ This project evaluates potential retail locations based on historic customer dat
 3. Ensure the `usa_ZipCodes_db` file path is correct. Check column headings if errors occur.
 4. Set your desired output file path and name.
 5. Run the script.
+6. Or use `geocode_address` for ad-hoc lookups:
+```python
+from np_re_model import geocode_address
+lat, lon = geocode_address("1600 Pennsylvania Ave, Washington DC")
+```
 
 ### Clustering and Graphing
 1. Ensure your input data has `latitude` and `longitude` columns.
@@ -47,6 +53,13 @@ Example command:
 python scripts/cluster_and_graph.py --input data/your_data.csv --output data/output.csv --radius 0.5 --threshold 30
 ```
 
+### Web Dashboard
+Start the dashboard with:
+```bash
+python -m webapp.app
+```
+Upload a CSV, choose your clustering algorithm, and download the clustered results.
+
 See `notebooks/` for example analysis (add your own for custom exploration).
 
 ## Extending
@@ -60,11 +73,8 @@ See `notebooks/` for example analysis (add your own for custom exploration).
 - Submit a pull request with a clear description.
 
 ## Next Steps / Ideas
-- Add support for more clustering algorithms (e.g., DBSCAN, HDBSCAN)
-- Build a web dashboard for interactive exploration
-- Add more data validation and cleaning utilities
-- Improve documentation and add more usage examples
-- Integrate with external geocoding APIs for more flexible coordinate lookup
+- Support additional visualizations and map layers
+- Provide Docker images for easier deployment
 
 ## License
 MIT License
