@@ -2,6 +2,8 @@ import numpy as np
 from geopy.distance import great_circle
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderServiceError
+import pandas as pd
+import zipcodes
 
 _geolocator = Nominatim(user_agent="np-retail-geocoder")
 
@@ -26,3 +28,34 @@ def geocode_address(address):
     except GeocoderServiceError:
         pass
     return None, None
+
+
+def get_zipcode_coordinates(zip_code):
+    """Return latitude and longitude for a US zip code using offline data."""
+    result = zipcodes.matching(str(zip_code))
+    if result:
+        try:
+            return float(result[0]['lat']), float(result[0]['long'])
+        except (KeyError, TypeError, ValueError):
+            return None, None
+    return None, None
+
+
+def load_us_mainland_zipcodes():
+    """Return a DataFrame of mainland US zip codes with coordinates."""
+    mainland_states = {
+        'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'ID', 'IL', 'IN',
+        'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT',
+        'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA',
+        'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'DC'
+    }
+    records = [
+        {
+            'zip_code': z['zip_code'],
+            'latitude': float(z['lat']),
+            'longitude': float(z['long'])
+        }
+        for z in zipcodes.list_all()
+        if z.get('state') in mainland_states
+    ]
+    return pd.DataFrame(records)

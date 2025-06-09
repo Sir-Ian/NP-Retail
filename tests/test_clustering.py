@@ -1,5 +1,8 @@
 import unittest
+import os
+import sys
 import pandas as pd
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from np_re_model.clustering import weighted_kmeans_clustering, dbscan_clustering
 
 class TestClustering(unittest.TestCase):
